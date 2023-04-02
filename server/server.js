@@ -1,19 +1,20 @@
-const express = require("express");
-const app = express();
-const cors = require("cors");
-require("dotenv").config({ path: "./config.env" });
-const port = process.env.PORT || 5000;
-app.use(cors());
-app.use(express.json());
-app.use(require("./routes/record"));
-// get driver connection
-const dbo = require("./db/conn");
- 
-app.listen(port, () => {
-  // perform a database connection when server starts
-  dbo.connectToServer(function (err) {
-    if (err) console.error(err);
- 
-  });
-  console.log(`Server is running on port: ${port}`);
-});
+const app = require('./app');
+const http = require('http');
+const server = http.createServer(app);
+const mongoose = require('mongoose');
+const socketio = require('socket.io');
+const  db = require('./db/db')
+
+db.connect().then(() => {
+    const io = socketio(server, {
+        cors: {
+            origin: '*'
+        }
+    })
+    
+    // Placeholder for when we get started with chat functionality.
+    // const chat = require('./routes/chat_publicly/chat')(io);
+    // app.use('/messages', chat);
+
+    server.listen(process.env.PORT || 4000); 
+})
