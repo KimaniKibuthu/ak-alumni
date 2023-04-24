@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./register.css";
+import { validateName, validateEmail, validatePassword, passwordsMatch } from "./inputValidation";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -37,7 +38,29 @@ const Register = () => {
     event.preventDefault();
     // Make sure to validate form data before submitting
     // Send the form data to the server (backend) using fetch or axios
-  };
+
+  if (!validateName(formData.firstName) || !validateName(formData.lastName)) {
+    alert("First name and last name cannot start with numerical values.");
+    return;
+  }
+
+  if (!validateEmail(formData.email)) {
+    alert("Please enter a valid email address.");
+    return;
+  }
+
+  if (!validatePassword(formData.password)) {
+    alert("Password must be at least 10 characters long, including at least one capital letter and one numerical value.");
+    return;
+  }
+
+  if (!passwordsMatch(formData.password, formData.confirmPassword)) {
+    alert("Passwords do not match!");
+    return;
+  }
+
+  // Send the form data to the server (backend) using fetch or axios
+};
 
   return (
     <form onSubmit={handleSubmit} className="register-form">
